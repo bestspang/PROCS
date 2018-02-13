@@ -3,7 +3,8 @@ from Ship import Shipdata
 global mx, my, gameEnd
 gameEnd = False
 t = 0
-cells = 50
+cells = 100
+mode = 0 # 0 = unlimited, 1 = limited turn mode
 ship = list(range(cells))
 board = []
 def setup():
@@ -68,6 +69,4 @@ def mouseClicked():
         print "Turn", t
     
 
-            
-            
     

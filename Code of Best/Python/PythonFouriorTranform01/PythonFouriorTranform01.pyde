@@ -8,19 +8,20 @@ inimag = [1.25, 1.25, 1.75, 0,-2, -2.5, -2, 0,1.75]
 both = [[-0.1, 0.1, 1.5, 2.5,1, 0, -1, -2.5,-1.5],[1.25, 1.25, 1.75, 0,-2, -2.5, -2, 0,1.75]]
 zoom = 50
 tpi = 2*math.pi
+keyframes = 0
 def setup():
     size(400, 400)
     global daft
     daft = cdft(inreal, inimag)
     #daft2 = dft(both)
-    print daft
-    #print daft2
-    #translate(width/2,height/2)
+    #print daft
+    print cmult(1,2,3,4)
+
     
 def draw():
     background(255)
     translate(width/2,height/2)
-    rotate(radians(180));
+    rotate(radians(180))
     #point(0,0)
     drawPoint(both,both[0], zoom)
     #drawPoint(daft,daft[0], zoom)
@@ -71,5 +72,9 @@ def drawPoint(alist,leng, sz):
         point(alist[0][i]*sz,alist[1][i]*sz)
         #print(alist[0][i]*sz,alist[1][i]*sz)
         
-def circle:
+def circle(x, y, r, col):
+    stroke(col)
+    ellipse(x, y, r, r)
     
+def cmult(a,b,c,d):
+    return (a*c-b*d,a*d+b*c)

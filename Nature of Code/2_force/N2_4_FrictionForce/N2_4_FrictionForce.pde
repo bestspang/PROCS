@@ -1,4 +1,4 @@
-Ball[] b = new Ball[5];
+Ball[] b = new Ball[20];
 
 void setup() {
   size(640,360);
@@ -16,7 +16,18 @@ void draw() {
   
   PVector gravity = new PVector(0,0.9);
   //gravity.mult(b.mass);//true gravity
-  PVector wind = new PVector(0.1,0);
+  float m = noise(frameCount*0.01);
+  println(m);
+  m = map(m, 0,1,-2,2);
+  PVector wind = new PVector(m,0);
+  
+  // friction!
+  PVector friction = b.velocity.copy();//.copy() & .get()
+  friction.normalize();
+  float c = -0.1;
+  friction.mult(c);
+  b.applyForce(friction);
+  
   
   if (mousePressed) {
   b.applyForce(wind);

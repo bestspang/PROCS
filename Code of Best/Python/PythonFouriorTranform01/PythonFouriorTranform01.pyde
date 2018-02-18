@@ -3,28 +3,48 @@
 import math
 import cmath
 #from dtf import DFT
-inreal = [-0.1, 0.1, 1.5, 2.5,1, 0, -1, -2.5,-1.5]
-inimag = [1.25, 1.25, 1.75, 0,-2, -2.5, -2, 0,1.75]
+inreal = []
+inimag = []
 both = [[-0.1, 0.1, 1.5, 2.5,1, 0, -1, -2.5,-1.5],[1.25, 1.25, 1.75, 0,-2, -2.5, -2, 0,1.75]]
-zoom = 50
+zoom = 5
 tpi = 2*math.pi
 keyframes = 0
 def setup():
-    size(400, 400)
-    global daft
-    daft = cdft(inreal, inimag)
-    #daft2 = dft(both)
-    #print daft
-    print cmult(1,2,3,4)
-
+    size(600, 600)
+    global daft, newboth
+    newboth = []
+    inreal = [-0.1, 0.1, 1.5, 2.5,1, 0, -1, -2.5,-1.5]
+    inimag = [1.25, 1.25, 1.75, 0,-2, -2.5, -2, 0,1.75]
+    #daft = cdft(inreal, inimag)
+    print both
+    #a = daft[0] * daft[1]
+    n = len(inreal)
+    for i in range(n):
+        inreal[i] = inreal[i]/zoom/2*width
+        inimag[i] = inimag[i]/zoom/2*width
+        
+    newboth = [inreal, inimag]
+    print "0----------------"
+    print newboth
+    
+    keyframes = cdft(newboth[0], newboth[1])
+    print "1----------------"
+    print keyframes
+    print "2----------------"
+    keyframes = sortlist(keyframes)
+    for i in keyframes:
+        print i
     
 def draw():
     background(255)
     translate(width/2,height/2)
+    scale(15)
     rotate(radians(180))
     #point(0,0)
     drawPoint(both,both[0], zoom)
     #drawPoint(daft,daft[0], zoom)
+    #for i in range(len(newboth[0])):
+    #    ellipse(newboth[0][i],newboth[1][i],1,1)
     
 def cdft(inreal, inimag):
   assert len(inreal) == len(inimag)
@@ -45,6 +65,15 @@ def cdft(inreal, inimag):
     outimag.append(sumimag)
   return (output)
 
+def arrange(inreal, inimag):
+    output = []
+    a = len(inreal)
+    for i in range(a):
+        x = inreal[i]
+        y = inimag[i]
+        output.append([x,y])
+    return output
+    
 def dft(x):
     t = []
     N = len(x)
@@ -67,7 +96,7 @@ def idft(t):
     return x
 
 def drawPoint(alist,leng, sz):
-    strokeWeight(5)
+    strokeWeight(1)
     for i in range(len(leng)):
         point(alist[0][i]*sz,alist[1][i]*sz)
         #print(alist[0][i]*sz,alist[1][i]*sz)
@@ -78,3 +107,17 @@ def circle(x, y, r, col):
     
 def cmult(a,b,c,d):
     return (a*c-b*d,a*d+b*c)
+
+def sortlist(x):
+    new = []
+    snew = []
+    for i in x:
+        y = i[0]*i[0]+i[1]*i[1]
+        g = i[2]
+        new.append([y, g])
+    def getKey(i):
+        return i[0]
+    new = sorted(new, key=getKey, reverse=True)
+    for i in new:
+        snew.append(x[i[1]])    
+    return snew

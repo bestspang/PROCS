@@ -5,7 +5,6 @@ import cmath
 #from dtf import DFT
 inreal = []
 inimag = []
-both = [[-0.1, 0.1, 1.5, 2.5, 1, 0, -1, -2.5, -1.5],[1.25, 1.25, 1.75, 0, -2, -2.5, -2, 0, 1.75]]
 zoom = 5.0
 tpi = 2*math.pi
 keyframes = 0
@@ -30,7 +29,7 @@ def setup():
 
     
 def draw():
-    #background(255, 0)
+    background(255, 0)
     #fill(255,1);#rgb(63,184,175,1)rgb(63,184,175)
     noFill()
     noStroke()
@@ -42,6 +41,7 @@ def draw():
     translate(width/2,height/2)
     #scale(15)
     rotate(radians(180))
+    drawPoint(adaptn, 7, 0)
     for i in range(len(keyframes)-shorter):#len(keyframes)-shorter
         global time
         f = keyframes[i][2]
@@ -50,16 +50,13 @@ def draw():
 
         angle = time / 360.0 * tpi * f
         c = cmult(math.cos(angle),math.sin(angle),keyframes[i][0], keyframes[i][1])
-        #translate(c[0],c[1])
-        circle(c[0],c[1],10,"RED",1,"FILL")
-        #translate(c[0],c[1])
-        circle(c[0],c[1],math.sqrt(c[0]*c[0]+c[1]*c[1]),0,0.5,0)
-        circle(c[0],c[1],10,"RED",1,0)
+
+        circle(0,0,math.sqrt(c[0]*c[0]+c[1]*c[1]),0,0.5,"FILL")
+        circle(c[0],c[1],1,"RED",1,0)
         translate(c[0],c[1])
 
-    time = timer(time)
-    #drawPoint(adaptn, 7, 0)
 
+    time = timer(time)
 
 def fdft(input):
   n = len(input)
@@ -96,7 +93,6 @@ def circle(x, y, r, c, s, f):
         noFill()
     ellipse(x,y,r,r)
     
-
 def drawPoint(alist,sz,f):
     for i in range(len(alist)):
         fill(f)

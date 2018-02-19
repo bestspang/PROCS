@@ -3,14 +3,28 @@ import processing.video.*;
 import java.awt.*;
 OpenCV cv;
 Capture video;
+PVector p1;
+PVector p2;
 boolean faceDe = true;
-float x, y,tpX, tpY, gX, gY;
+boolean isOver;
+float x, y,tpX, tpY, m, b, s;
+float area = 20;
 void setup(){
   size(640,480);//background(121,121,117);
   video = new Capture(this, width/2, height/2);
   cv = new OpenCV(this, width/2, height/2);
-  cv.loadCascade(OpenCV.CASCADE_FRONTALFACE);  
+  //CASCADE_PEDESTRIANS CASCADE_FULLBODY CASCADE_UPPERBODY
+  cv.loadCascade(OpenCV.CASCADE_FRONTALFACE); //CASCADE_FRONTALFACE
   video.start();
+  ////////////////////////////////////////////
+  p1 = new PVector(random(width),0);// [width/2, 0] , [0, random(height)]
+  p2 = new PVector(random(width),height);// [width/2, height] , [width, random(height)]
+  PVector sub = PVector.sub(p2, p1);
+  // y = mx + b
+  m = sub.y / sub.x;
+  b = p1.y - m * p1.x;
+  s = 0;
+  isOver = false;
 }
 
 void draw(){
@@ -23,6 +37,14 @@ void draw(){
     headDetect();
   }
   popMatrix();
+  line(p1.x, p1.y, p2.x, p2.y);
+  fill(255);
+  text(str(int(s)), 20, 20);
+  float faceX = 2*tpX*-1 ,faceY = 2*tpY;
+  //println(faceX, faceY);
+  //println(mouseX, mouseY);
+  //println(m * x + b - area);
+  detectIntersect(faceX, faceY, area);
 }
 
 void keyPressed() {
@@ -51,5 +73,22 @@ void headDetect() {
     //println(gX + "," + tpX + "," + width);
     strokeWeight(1);
     point(tpX, tpY);
+  } 
+}
+
+void detectIntersect(float x, float y, float area) {
+  if ((y > (m * x + b - area)) && (y < (m * x + b + area))) {
+    noStroke();
+    fill(255, 0, 0);
+    ellipse(x, y, 10, 10);
+    //print ("Hello!");
+    if (isOver == false) {
+        s +=1;
+        isOver = true;
+      }
+  }else{
+    isOver = false;
   }
 }
+  
+  

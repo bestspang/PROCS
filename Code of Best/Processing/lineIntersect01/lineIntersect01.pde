@@ -25,10 +25,15 @@ void draw() {
   text(str(s), 20, 20);
   line(p1.x, p1.y, p2.x, p2.y);
   fill(255);
-  if ((mouseY > (m * mouseX + b - area)) && (mouseY < (m * mouseX + b + area))) {
+  detectIntersect(mouseX, mouseY, area);
+}
+
+void detectIntersect(float x, float y, float area){
+  if ((y > (m * x + b - area)) && (y < (m * x + b + area))) {
     noStroke();
     fill(255, 0, 0);
-    ellipse(mouseX, mouseY, 20, 20);
+    ellipse(x, y, 20, 20);
+    print ("Hello!");
     if (isOver == false) {
         s +=1;
         isOver = true;

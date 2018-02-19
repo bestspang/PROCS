@@ -29,7 +29,7 @@ def setup():
 
     
 def draw():
-    background(255, 0)
+    #background(255, 0)
     #fill(255,1);#rgb(63,184,175,1)rgb(63,184,175)
     noFill()
     noStroke()
@@ -41,7 +41,7 @@ def draw():
     translate(width/2,height/2)
     #scale(15)
     rotate(radians(180))
-    drawPoint(adaptn, 7, 0)
+    #drawPoint(adaptn, 7, 160)
     for i in range(len(keyframes)-shorter):#len(keyframes)-shorter
         global time
         f = keyframes[i][2]
@@ -50,11 +50,14 @@ def draw():
 
         angle = time / 360.0 * tpi * f
         c = cmult(math.cos(angle),math.sin(angle),keyframes[i][0], keyframes[i][1])
-
+        x=c[0]
+        y=c[1]
         circle(0,0,math.sqrt(c[0]*c[0]+c[1]*c[1]),0,0.5,"FILL")
         circle(c[0],c[1],1,"RED",1,0)
+        strokeWeight(2)
+        #line(x,y,0,0)
         translate(c[0],c[1])
-
+        line(x,y,0,0)
 
     time = timer(time)
 

@@ -12,7 +12,8 @@ float x, y,tpX, tpY, m, b, s, num;
 ///////////////////////////////////////////////////////////
 boolean faceDe   = true;
 float   area     = 20;
-float   timer    = 5;
+float   timer    = 0;
+float   sec      = 1;
 String  url      = "localhost:8889";
 String  user     = "root";
 String  pass     = "root";
@@ -36,7 +37,7 @@ void setup(){
   // y = mx + b
   m = sub.y / sub.x;
   b = p1.y - m * p1.x;
-  s = 0;
+  s = 0; num = 1;
   isOver = false;
   cn.dbReset();//reset database
 }
@@ -61,7 +62,7 @@ void draw(){
   detectIntersect(faceX, faceY, area);
   //cn.dbPrint();
   //cn.dbPrintLastest();
-  cn.dbInsert(faceX, faceY, num, 2);
+  cn.dbInsert(faceX, faceY, num, sec, isOver);
 }
 ///////////////////////////////////////////////////////////
 void keyPressed() {
@@ -143,22 +144,22 @@ class ConnectSQL
     { println("connection failed !");}
     }
     
-  public void dbInsert(float x, float y, float z, float sec) {
-    if (millis() - timer >= sec * 1000){
-  ///////////////////////////////////////////////
-  if ( msql.connect() )
-    {
+  public void dbInsert(float x, float y, float z, float sec, Boolean detect) {
+  if (millis() - timer >= sec * 1000){
+    if ( msql.connect() )
+    {   
         msql.query("INSERT INTO Coordinate (x_coordinate, y_coordinate, description) VALUES (%s, %s, %s)"
         , str(x), str(y), str(z));
-        msql.query( "SELECT * FROM Coordinate" );
+        msql.query( "SELECT * FROM Coordinate ORDER BY id DESC LIMIT 1;" );
         while (msql.next()) {
-          println( msql.getInt(1)+", "+ msql.getString(2)+", "+ msql.getString(3)+","+ millis()/1000);
+          println( msql.getInt(1)+", "+ msql.getString(2)
+          +", "+ msql.getString(3)+", "+ millis()/1000+", "+ str(detect));
         };
+        num++;
       }
     else{println("connection failed !");}
   ///////////////////////////////////////////////
     timer = millis();
-    num++;
     }
     }
        

@@ -8,10 +8,11 @@ MySQL msql; // initialize
 ConnectSQL cn;
 PVector p1, p2;
 boolean isOver;
-float x, y,tpX, tpY, m, b, s;
+float x, y,tpX, tpY, m, b, s, num;
 ///////////////////////////////////////////////////////////
 boolean faceDe   = true;
 float   area     = 20;
+float   timer    = 5;
 String  url      = "localhost:8889";
 String  user     = "root";
 String  pass     = "root";
@@ -37,6 +38,7 @@ void setup(){
   b = p1.y - m * p1.x;
   s = 0;
   isOver = false;
+  cn.dbReset();//reset database
 }
 ///////////////////////////////////////////////////////////
 void draw(){
@@ -58,7 +60,8 @@ void draw(){
   //println(m * x + b - area);
   detectIntersect(faceX, faceY, area);
   //cn.dbPrint();
-  cn.dbPrintLastest();
+  //cn.dbPrintLastest();
+  cn.dbInsert(faceX, faceY, num, 2);
 }
 ///////////////////////////////////////////////////////////
 void keyPressed() {
@@ -137,26 +140,26 @@ class ConnectSQL
       };
     }
     else
-    {
-        println("connection failed !");
-      }
+    { println("connection failed !");}
     }
     
-  public void dbInsert() {
+  public void dbInsert(float x, float y, float z, float sec) {
+    if (millis() - timer >= sec * 1000){
+  ///////////////////////////////////////////////
   if ( msql.connect() )
     {
-        msql.query( "SELECT COUNT(*) FROM Coordinate" );
-        while (msql.next()){
-        println ( "from data: " 
-        + msql.getInt(1)+ ", "
-        + msql.getString(2)+ ", "
-        + msql.getString(3) );
-      };
-    }
-    else
-    {
-        println("connection failed !");
+        msql.query("INSERT INTO Coordinate (x_coordinate, y_coordinate, description) VALUES (%s, %s, %s)"
+        , str(x), str(y), str(z));
+        msql.query( "SELECT * FROM Coordinate" );
+        while (msql.next()) {
+          println( msql.getInt(1)+", "+ msql.getString(2)+", "+ msql.getString(3)+","+ millis()/1000);
+        };
       }
+    else{println("connection failed !");}
+  ///////////////////////////////////////////////
+    timer = millis();
+    num++;
+    }
     }
        
   public void dbPrintLastest() {
@@ -165,15 +168,18 @@ class ConnectSQL
         msql.query( "SELECT COUNT(*) FROM Coordinate" );
         while (msql.next()){
         int a = msql.getInt(1);
-        println ( "data count: " + a );
+        println ( "count: " + a );
       };
+    }else{ println("connection failed !");}
     }
-    else
+    
+  public void dbReset() {
+  if ( msql.connect() )
     {
-        println("connection failed !");
-      }
-    }
-      
+        msql.query( "TRUNCATE TABLE Coordinate" );
+        println("reset data completed!");
+    }else{ println("connection failed !");}
+    }    
 ///////////////////////////////////////////////////////////
 }
 ///////////////////////////////////////////////////////////

@@ -1,9 +1,8 @@
-from Ship import Ship
-from Ship import Shipdata
+from Ship import *
 global mx, my, gameEnd
 gameEnd = False
 t = 0
-cells = 100
+cells = 20
 mode = 0 # 0 = unlimited, 1 = limited turn mode
 ship = list(range(cells))
 board = []

@@ -13,7 +13,7 @@ float x, y,tpX, tpY, m, b, s, num;
 boolean faceDe   = true;
 float   area     = 20;
 float   timer    = 0;
-float   sec      = 1;
+float   sec      = 0.1;
 String  url      = "localhost:8889";
 String  user     = "root";
 String  pass     = "root";
